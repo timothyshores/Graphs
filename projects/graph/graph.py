@@ -14,20 +14,42 @@ class Graph:
         """
         Add a vertex to the graph.
         """
-        pass  # TODO
+        self.vertices[vertex] = set()
 
     def add_edge(self, v1, v2):
         """
         Add a directed edge to the graph.
         """
-        pass  # TODO
+        if v1 in self.vertices and v2 in self.vertices:
+            self.vertices[v1].add(v2)
+        else:
+            raise IndexError("Vertex does not exist")
 
     def bft(self, starting_vertex):
         """
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+
+        # create a queue
+        queue = Queue()
+        # create set of visited nodes
+        visited = set()
+        # add starting node to the queue
+        queue.enqueue(starting_vertex)
+        # while queue is not empty
+        while queue.size() > 0:
+            # pop first node out of the queue
+            vertex = queue.dequeue()
+            # if vertex is not in visited
+            if vertex not in visited:
+                # add vertex to visited set
+                visited.add(vertex)
+                # print vertex
+                print(vertex)
+                # get adjacent edges and add to list
+                for next_vertex in self.vertices(vertex):
+                    queue.enqueue(next_vertex)
 
     def dft(self, starting_vertex):
         """
@@ -42,12 +64,7 @@ class Graph:
         beginning from starting_vertex.
         This should be done using recursion.
         """
-        if visited is None:
-            visited = set()
-
-        visited.add(starting_vertex)
-        for child_vert not in visited:
-            self.dft_recursive
+        pass  # TODO
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -55,22 +72,7 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        q = Queue()
-        visited = set()
-        q.enqueue()  # add to back of queue
-
-        while q.size > 0:
-            path = q.dequeue()  # remove from front of queue
-            current = path[-1]
-            if current not in visited:
-                if current == target:
-                    return path
-                visited.add(current)
-                for next_vert in self.vertices[current]:
-                    new_path = list(path)
-                    new_path.append(next_vert)
-                    q.enqueue(new_path)
-        return "Value not found"
+        pass  # TODO
 
     def dfs(self, starting_vertex, destination_vertex):
         """
