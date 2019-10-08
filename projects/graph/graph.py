@@ -48,7 +48,7 @@ class Graph:
                 # print vertex
                 print(vertex)
                 # get adjacent edges and add to list
-                for next_vertex in self.vertices(vertex):
+                for next_vertex in self.vertices[vertex]:
                     queue.enqueue(next_vertex)
 
     def dft(self, starting_vertex):
