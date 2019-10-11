@@ -1,5 +1,6 @@
 # Given two words (beginWord and endWord), and a dictionary's word list, return the
-# shortest transformation sequence from beginWord to endWord, such that:
+# shortest transformation sequence from beginWord to endWord
+
 # Only one letter can be changed at a time.
 # Each transformed word must exist in the word list. Note that beginWord is not a
 # transformed word.
@@ -11,19 +12,29 @@
 # You may assume no duplicates in the word list.
 # You may assume beginWord and endWord are non-empty and are not the same.
 ​
+# Sample:
+# beginWord = "hit"
+# endWord = "cog"
+# return: ['hit', 'hot', 'cot', 'cog']
+
+# beginWord = "sail"
+# endWord = "boat"
+# ['sail', 'bail', 'boil', 'boll', 'bolt', 'boat']
+
+# beginWord = "hungry"
+# endWord = "happy"
+# None
 ​
 # Breakdown
-# Shortest - BFS
-# One letter at a time - edges
 # Word list/words - Vertexes
-# Return none - path not found
-# BeginWord and EndWord - Starting and ending vertices
-# No duplicates
+# One letter difference- edges
+# Shortest - BFS
+# dictionary - list of vertexes
+# beginWOord - starting vertex
+# endWord - destination vertex
+# No duplicates - uset a set()
 # Same length - don't ahve to do anything with different length words
-# ^^ Connected componets
-# Transofrmation sequence - path
-​
-​
+​​
 # If we organize the word list in a graph
 # with words as vertexes and edges between
 # two words that are 1 letter different,
@@ -44,9 +55,11 @@ for word in words:
 # I'm going to make a helper function that looks up
 # What neighbors or edges a word would have in the graph
 ​
-​
 # Calculate a small part of the graph to find edges and vertexes relevant to
 # our current problem
+
+#  find and or create all nodes or edges for words that only vary by 1 letter e.g. sail & bail or hip & hop
+#  replaces entry in adjacency list for that node
 
 
 def get_neighbors(word):
@@ -63,10 +76,6 @@ def get_neighbors(word):
                 neighbors.append(w)
 
     return neighbors
-
-
-​
-​
 
 
 class Queue():
@@ -87,25 +96,25 @@ class Queue():
 
 
 ​
-​
 # Use a BFS variant to find our answer
 
 
 def find_word_ladder(begin_word, end_word):
+    qq = Queue()
     visited = set()
-    q = Queue()
-    q.enqueue([begin_word])
-    while q.size() > 0:
-        path = q.dequeue()
-        current = path[-1]
-        if current not in visited:
-            visited.add(current)
-            if current == end_word:
+    qq.enqueue([begin_word])
+
+    while qq.size() > 0:
+        path = qq.dequeue()
+        vertex = path[-1]
+        if vertex not in visited:
+            if vertex == end_word:
                 return path
-            for new_word in get_neighbors(current):
+            visited.add(vertex)
+            for new_word in get_neighbors(vertex):
                 new_path = list(path)
                 new_path.append(new_word)
-                q.enqueue(new_path)
+                qq.enqueue(new_path)
 
 
 ​
