@@ -97,8 +97,6 @@ class Queue():
 
 ​
 # Use a BFS variant to find our answer
-
-
 def find_word_ladder(begin_word, end_word):
     qq = Queue()
     visited = set()
@@ -107,17 +105,18 @@ def find_word_ladder(begin_word, end_word):
     while qq.size() > 0:
         path = qq.dequeue()
         vertex = path[-1]
+
         if vertex not in visited:
             if vertex == end_word:
                 return path
             visited.add(vertex)
+
             for new_word in get_neighbors(vertex):
                 new_path = list(path)
                 new_path.append(new_word)
                 qq.enqueue(new_path)
 
 
-​
 ​
 print(find_word_ladder("sail", "boat"))
 print(find_word_ladder("sail", "boats"))

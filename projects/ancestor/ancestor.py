@@ -1,59 +1,68 @@
-class Queue():
+# will be searching for the longest valid path -- calls for DFS using a stack
+class Stack():
+    # initialize an empty list for the stack
     def __init__(self):
-        self.queue = []
+        self.stack = []
+ 
+    # Add new elements to the end of the stack
+    def push(self, value):
+        self.stack.append(value)
 
-    def enqueue(self, value):
-        self.queue.append(value)
-
-    def dequeue(self):
+    # Remove the last element from the stack 
+    def pop(self):
         if self.size() > 0:
-            return self.queue.pop(0)
+            return self.stack.pop()
         else:
             return None
 
+    # Return the number of elements in the stack
     def size(self):
-        return len(self.queue)
+        return len(self.stack)
 
-
-class Graph():
-    def __init__(self):
-        self.vertices = {}
-
-    def add_vertex(self, vertex_id):
-        if vertex_id not in self.vertices:
-            self.vertices[vertex_id] = set()
-
-    def add_edges(self, v1, v2):
-        if v1 in self.vertices and v2 in self.vertices:
-            self.vertices[v1].add(v2)
-        else:
-            raise IndexError("Vertex does not exist")
-
-
+# Return the earlist ancestor from a list of (parent, child) pairs of ancestors and a starting node
+# If there are multiple earliest ancestors the function returns the smaller value
 def earliest_ancestor(ancestors, starting_node):
-    graph = Graph()
 
-    for pair in ancestors:
-        graph.add_vertex(pair[0])
-        graph.add_vertex(pair[1])
+    def get_parents(child):
+        """
+        returns array of parents (neighbors) of child (value)
+        graph will be DIRECTIONAL -- we only want to consider ancestors, so
+        we will only search upwards through the parental heritage, never searching downward
+        """
+        return [pair[0] for pair in ancestors if pair[1] == child]
 
-    q = Queue()
-    q.enqueue([starting_node])
+    # return -1 if starting node has no parents
+    if get_parents(starting_node) == []:
+        return -1
 
-    max_path_length = 1
-    earliest_ancestor = -1
+    visited = set()
+    s = Stack()
+    s.push([starting_node])
 
-    while q.size() > 0:
-        path = q.dequeue()
-        v = path[-1]
+    # ancestor path will keep track of longest running path
+    ancestor_path = []
 
-        if (len(path) >= max_path_length and v < earliest_ancestor) or (len(path) > max_path_length):
-            earliest_ancestor = v
-            max_path_length = len(path)
+    # while Stack s is empty
+    while s.size() > 0:
+        # Set path to the last element in the stack
+        path = s.pop()
+        last_child = path[-1]
+        parents = get_parents(last_child)
+        if len(parents) == 0:
+            # if end of tested path has no parents, the path becomes current ancestor path
+            # but only if it's longer than the current a_path
+            # in case of tie, the path with the lowest-value earliest ancestor wins
+            if len(path) > len(ancestor_path) or (len(path) == len(ancestor_path) and path[-1] < ancestor_path[-1]):
+                ancestor_path = path
+        visited.add(last_child)
+        for parent in parents:
+            copy = path.copy()
+            copy.append(parent)
+            s.push(copy)
 
-        for neighbor in graph.vertices[v]:
-            path_copy = list(path)
-            path_copy.append(neighbor)
-            q.enqueue(path_copy)
+    return ancestor_path[-1]
 
-    return earliest_ancestor
+
+# test_ancestors = [(1, 3), (2, 3), (3, 6), (5, 6), (5, 7),
+#                   (4, 5), (4, 8), (8, 9), (11, 8), (10, 1)]
+# print(earliest_ancestor(test_ancestors, 1))
